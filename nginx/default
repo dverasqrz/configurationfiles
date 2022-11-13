@@ -1,31 +1,43 @@
+# /etc/nginx/conf.d/default.conf nginx:1.22.1
 server {
-  # Example PHP Nginx FPM config file
-  listen 80 default_server;
-  listen [::]:80 default_server;
-  root /var/www/html;
+    listen       80;
+    server_name  localhost;
 
-  # Add index.php to setup Nginx, PHP & PHP-FPM config
-  index index.php index.html index.htm index.nginx-debian.html;
+    #access_log  /var/log/nginx/host.access.log  main;
 
-  server_name _;
+    location / {
+        root   /usr/share/nginx/html;
+        index  index.php index.html index.htm;
+    }
 
-  location / {
-    try_files $uri $uri/ =404;
-  }
+    #error_page  404              /404.html;
 
-  # pass PHP scripts on Nginx to FastCGI (PHP-FPM) server
-  location ~ \.php$ {
-    include snippets/fastcgi-php.conf;
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
 
-    # Nginx php-fpm sock config:
-    fastcgi_pass unix:/run/php/php8.1-fpm.sock;
-    # Nginx php-cgi config :
-    # Nginx PHP fastcgi_pass 127.0.0.1:9000;
-  }
+    # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+    #
+    location ~ \.php$ {
+        proxy_pass   http://127.0.0.1;
+    }
 
-  # deny access to Apache .htaccess on Nginx with PHP, 
-  # if Apache and Nginx document roots concur
-  location ~ /\.ht {
-    deny all;
-  }
-} # End of PHP FPM Nginx config example
+    # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+    #
+    location ~ \.php$ {
+        root           html;
+        fastcgi_pass   127.0.0.1:9000;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+        include        fastcgi_params;
+    }
+
+    # deny access to .htaccess files, if Apache's document root
+    # concurs with nginx's one
+    #
+	location ~ /\.ht {
+        deny  all;
+    }
