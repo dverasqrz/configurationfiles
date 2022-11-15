@@ -21,4 +21,5 @@ mv default /etc/nginx/sites-available/default
 service nginx restart
 wget https://raw.githubusercontent.com/dverasqrz/configurationfiles/main/nginx/index.php
 rm -rf /var/www/html/* && mv index.php /var/www/html/index.php
+apt-get clean
 echo "Os documentos estarao em /var/www/html/index.php"
