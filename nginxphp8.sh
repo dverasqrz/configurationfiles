@@ -10,7 +10,6 @@ sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/' /usr/local/php/php.ini
 cp /usr/local/etc/php-fpm.d/www.conf.default /usr/local/etc/php-fpm.d/www.conf
 cp sapi/fpm/php-fpm /usr/local/bin
 cp sapi/fpm/php-fpm.conf /usr/local/etc/php-fpm.conf
-sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/' /usr/local/php/php.ini
 sed -i 's/user = nobody/user = www-data/' /usr/local/etc/php-fpm.d/www.conf
 sed -i 's/group = nobody/group = www-data/' /usr/local/etc/php-fpm.d/www.conf
 sed -i '$d' /usr/local/etc/php-fpm.conf

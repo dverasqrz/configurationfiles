@@ -1,0 +1,13 @@
+FROM php:8.1.12-fpm
+RUN apt-get update
+RUN cp /usr/local/etc/php/php.ini-development /usr/local/php/php.ini
+RUN sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/' /usr/local/php/php.ini
+RUN cp /usr/local/etc/php-fpm.d/www.conf.default /usr/local/etc/php-fpm.d/www.conf
+RUN apt-get install nginx=1.18.0-6.1+deb11u2 wget -y && apt-get clean
+RUN wget https://raw.githubusercontent.com/dverasqrz/configurationfiles/main/nginx/default
+RUN mv default /etc/nginx/sites-available/default
+RUN service nginx restart
+RUN /usr/local/sbin/php-fpm &
+RUN rm -f * && wget https://raw.githubusercontent.com/dverasqrz/configurationfiles/main/nginx/index.php
+EXPOSE 9000 80
+CMD ["php-fpm"]
