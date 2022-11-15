@@ -1,6 +1,7 @@
 #!/bin/bash
 echo "Instalando php8.1.12 e httpd-2.4.54"
-apt-get update && apt-get install wget gcc make pkg-config libapr1-dev libaprutil1-dev libxml++2.6-dev libsqlite3-dev libbz2-dev libdb-dev libgmp-dev libgdbm-dev libreadline-dev -y
+echo "Duração 21 minutos em média"
+apt-get update && apt-get install gcc make pkg-config libapr1-dev libaprutil1-dev libxml++2.6-dev libsqlite3-dev libbz2-dev libdb-dev libgmp-dev libgdbm-dev libreadline-dev -y
 wget https://www.php.net/distributions/php-8.1.12.tar.gz
 tar -zxf php-8.1.12.tar.gz && rm -f php-8.1.12.tar.gz
 cd php-8.1.12 && ./configure --prefix=/usr                \
@@ -39,16 +40,17 @@ sed -i 's@php/includes"@&\ninclude_path = ".:/usr/lib/php"@' \
     /etc/php.ini
 cd / && wget https://dlcdn.apache.org/httpd/httpd-2.4.54.tar.gz && tar -zxf httpd-2.4.54.tar.gz && rm -f httpd-2.4.54.tar && mkdir /apache2.4.54
 cd httpd-2.4.54 && ./configure -prefix=/apache2.4.54/apache2.4.54 -enable-shared=max
-mkdir /apache2.4.54 && ./configure -prefix=/apache2.4.54/apache2.4.54 -enable-shared=max
+mkdir /servwebphp && ./configure -prefix=/servwebphp/apache2.4.54 -enable-shared=max
 make && make install
 sed -i -e '/proxy_module/s/^#//'      \
        -e '/proxy_fcgi_module/s/^#//' \
-       /apache2.4.54/apache2.4.54/conf/httpd.conf
+       /servwebphp/apache2.4.54/conf/httpd.conf
 echo \
 'ProxyPassMatch ^/(.*\.php)$ fcgi://127.0.0.1:9000/srv/www/$1' >> \
-/apache2.4.54/apache2.4.54/conf/httpd.conf
-echo "AddType application/x-httpd-php-source .phps" >> /apache2.4.54/apache2.4.54/conf/httpd.conf
+/servwebphp/apache2.4.54/conf/httpd.conf
+echo "AddType application/x-httpd-php-source .phps" >> /servwebphp/apache2.4.54/conf/httpd.conf
 echo user = www-data >> /etc/php-fpm.conf && echo group = www-data >> /etc/php-fpm.conf
 apt-get clean
-/apache2.4.54/apache2.4.54/bin/apachectl restart
+/servwebphp/apache2.4.54/bin/apachectl restart
 php-fpm
+echo "Documentos: /servwebphp/apache2.4.54/htdocs/index.html"
