@@ -19,4 +19,6 @@ cd / && /usr/local/bin/php-fpm
 wget https://raw.githubusercontent.com/dverasqrz/configurationfiles/main/nginx/default
 mv default /etc/nginx/sites-available/default
 service nginx restart
+wget https://raw.githubusercontent.com/dverasqrz/configurationfiles/main/nginx/index.php
+mv index.php /var/www/html/index.php; rm -f /var/www/html/index.html
 echo "Os documentos estarao em /var/www/html/index.php"
