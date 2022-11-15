@@ -16,5 +16,7 @@ sed -i 's/group = nobody/group = www-data/' /usr/local/etc/php-fpm.d/www.conf
 sed -i '$d' /usr/local/etc/php-fpm.conf
 echo "include=/usr/local/etc/php-fpm.d/*.conf" >> /usr/local/etc/php-fpm.conf
 cd / && /usr/local/bin/php-fpm
-sed -i 's/index index.html/index index.php index.html/' /etc/nginx/sites-available/default
-
+wget https://raw.githubusercontent.com/dverasqrz/configurationfiles/main/nginx/default
+mv default /etc/nginx/sites-available/default
+service nginx restart
+echo "Os documentos estarao em /var/www/html/index.php"
